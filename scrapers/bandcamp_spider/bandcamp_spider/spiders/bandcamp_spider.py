@@ -10,6 +10,7 @@ import scrapy
 from selenium import webdriver
 import time
 import pandas as pd
+        
 
 class BandCampSpider(scrapy.Spider):
     '''
@@ -21,47 +22,54 @@ class BandCampSpider(scrapy.Spider):
     name = "bandcamp"
     allowed_domain = ['bandcamp.com']
     
-    def __init__(self,start_domain='',album_name = '',artist_name='',*args,**kwargs):
+    def __init__(self,start_urls='',*args,**kwargs):
         
         self.driver = webdriver.Firefox() #use selenium driver
-        self.start_urls = [start_domain]
-        self.album_name = album_name
-        self.artist_name = artist_name
-    
+        #self.start_urls = start_urls
+        #self.album_name = album_name
+        #self.artist_name = artist_name
+        
+        #clean up urls
+        #start_urls = start_urls.replace("[",'')
+        #start_urls = start_urls.replace("]",'')
+        #start_urls = start_urls.replace("'",'')
+        #start_urls = start_urls.replace(" ",'')
+        #start_urls = start_urls.split(',')
+        
+        self.start_urls = [start_urls]
+        
+        super(BandCampSpider, self).__init__(**kwargs)
+        
     def parse(self,response):
+        
         self.driver.get(response.url)
-        more_thumbs_el,more_writing_el = [],[]
         
-        #see if there are any 'more thumbs' if so, retrieve the elements
-        try:
-            more_thumbs_el = self.driver.find_element_by_css_selector('.more-thumbs')
-        except:
-            pass
-        #see if there are any 'more comments' if so, retrieve the elements
-        try:
-            more_writing_el = self.driver.find_element_by_css_selector('.more-writing')
-        except:
-            pass
+        #expand page to reveal all supporters
+        expand_supporters(self)
         
-        #loop through the 'more' buttons and press them
-        if more_thumbs_el or more_writing_el:
-            # open up all the contributors for the album
-            for el in [more_writing_el,more_thumbs_el]:
-                while True:
-                    try:
-                        el.click()
-                        time.sleep(1)
-                    except:
-                        break
-            #update response to include the 'more' clicks
-            response = scrapy.Selector(text=self.driver.page_source)
+        #update response to include the 'more' clicks
+        response = scrapy.Selector(text=self.driver.page_source)
         
-        #NOTE: I'm not sure if this will work if there are more thumbs
-        # but not more comments or vice versa. But I think it will..
+        #get artist name
+        artist_name_section = response.css('div#name-section')
+        artist_name = artist_name_section.css('a::text').extract()[0]
+        
+        #get album name
+        album_name = response.css('h2.trackTitle::text')[0].extract()
+        #have to clean it up...
+        album_name = album_name.replace(' ','')
+        album_name = album_name.replace('\n','')
+        
+        album_info_df = get_items_tags(response,artist_name,album_name)
+        
+        
         
         '''
         CONTRIBUTOR INFORMATION
         '''
+        # contrib_name,contrib_url = get_contributors(response)
+        # add_contributors_to_db(contrib_name,contrib_url)
+        
         contrib_name,contrib_url = [],[]
         
         
@@ -97,16 +105,87 @@ class BandCampSpider(scrapy.Spider):
         df = pd.DataFrame(data=None,columns=['artist_name','contrib_name','contrib_url','album_name','album_url'])
         df['contrib_name'] = contrib_name
         df['contrib_url'] = contrib_url
-        df['artist_name'] = self.artist_name
-        df['album_name'] = self.album_name        
+        df['artist_name'] = artist_name
+        df['album_name'] = album_name        
         df['album_url'] = self.start_urls[0]
         
-        #only save if there are at least 10 contributors:
-        if df.shape[0] >= 10:
-            file_name = '/Users/shayneufeld/dropbox/insight/pricecamp/data/albums_fixed/%s-%s.csv' % (self.album_name,self.artist_name)
-            file_name = file_name.replace(',','')
-            file_name = file_name.replace(' ','')
-            df.to_csv(file_name)
+        # save dataframe
+        file_name = '/Users/shayneufeld/dropbox/insight/pricecamp/data/albums_supporters/%s-%s.csv' % (album_name,artist_name)
+        file_name = file_name.replace(',','')
+        file_name = file_name.replace(' ','')
+        df.to_csv(file_name)
+        
+        
+        #save album info dataframe - same name, different folder
+        file_name = '/Users/shayneufeld/dropbox/insight/pricecamp/data/albums_info/%s-%s.csv' % (album_name,artist_name)
+        file_name = file_name.replace(',','')
+        file_name = file_name.replace(' ','')
+        album_info_df.to_csv(file_name)
         
         #close down the driver
         self.driver.close()
+        
+
+## FUNCTIONS
+
+def get_items_tags(response,artist_name,album_name):
+    
+    item_types = response.css('span.buyItemPackageTitle::text')
+    item_prices = response.css('span.base-text-color::text')
+    items_df = pd.DataFrame()
+    items_df.loc[0,'album_name'] = album_name
+    items_df.loc[0,'artist_name'] = artist_name
+    
+    for i_type,i_price in zip(item_types,item_prices):
+        i_type_str = i_type.extract()
+        i_type_price = i_price.extract()
+        
+        #put into dataframe
+        items_df.loc[0,i_type_str] = i_type_price
+        
+    tag_elem = response.css('a.tag::text')
+    tags = []
+    
+    for elem in tag_elem:
+        tags.append(elem.extract())
+    
+    items_df.loc[0,'tags'] = str(tags[:-1])
+    items_df.loc[0,'location'] = str(tags[-1])
+    
+    #finally, get date:
+    date_mess = response.css('div.tralbumData.tralbum-credits::text').extract()[0]
+    date_mess = date_mess.replace('\n','')
+    date_mess = date_mess.replace(' ','')
+    date_mess = date_mess.replace('released','')
+    date = date_mess[-4:]
+    items_df.loc[0,'year'] = date
+    
+    return(items_df)
+    
+
+
+def expand_supporters(selenium_driver):
+#click through more buttons on the album page
+    more_thumbs_el,more_writing_el = [],[]
+    
+    #see if there are any 'more thumbs' if so, retrieve the elements
+    try:
+        more_thumbs_el = selenium_driver.driver.find_element_by_css_selector('.more-thumbs')
+    except:
+        pass
+    #see if there are any 'more comments' if so, retrieve the elements
+    try:
+        more_writing_el = selenium_driver.driver.find_element_by_css_selector('.more-writing')
+    except:
+        pass
+    
+    #loop through the 'more' buttons and press them
+    if more_thumbs_el or more_writing_el:
+        # open up all the contributors for the album
+        for el in [more_writing_el,more_thumbs_el]:
+            while True:
+                try:
+                    el.click()
+                    time.sleep(1)
+                except:
+                    break
