@@ -77,14 +77,6 @@
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="static/js/bootstrap.min.js"></script>
 
-  </div><!-- /.container -->
-
-    <div class="container">
-      <div class="starter-template">
-        <h3>predicted revenue:</h3>
-        <p class="lead">{{predicted_revenue}}</p>
-      </div>
-
     
 
   </div> <!-- /.container-->
@@ -100,6 +92,14 @@
         <tr><td>{{item['item_type']}}</td><td>{{ item['item_price']}}</td><td>{{item['item_frac'] }}</td></tr> 
         {% endfor %} 
     </table> 
+    
+    </div><!-- /.container -->
+
+    <div class="container">
+      <div class="starter-template">
+        <h3>predicted revenue:</h3>
+        <p class="lead">{{predicted_revenue}}</p>
+      </div>
     
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script> 
     <script src="static/js/bootstrap.min.js"></script> 
