@@ -8,12 +8,16 @@ Created on Fri Jul 21 14:57:13 2017
 import pandas as pd
 from sklearn import linear_model
 import numpy as np
+import pickle
+
 
 all_genres = pd.read_csv('/Users/shayneufeld/Dropbox/insight/pricecamp/all_genres.csv',index_col=0)
 data = pd.read_csv('/Users/shayneufeld/Dropbox/insight/pricecamp/master_table_trimmed.csv',index_col=0)
 features = ['sp_popularity','sp_num_followers']
 supporters_sparse = scipy.sparse.load_npz('/Users/shayneufeld/Dropbox/insight/pricecamp/data/supporters_sparse_matrix.npz')
 artist_table = pd.read_csv('/Users/shayneufeld/Dropbox/insight/pricecamp/data/artist_table.csv')
+
+als_model = pickle.load(open(filename, 'rb'))
 
 def predictNumBuyers(fromUser  = 'Default', rel_artists = [],artist_name=[],data=data,features=features):
     x = rel_artists.loc[:,features].values
