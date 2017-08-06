@@ -77,36 +77,30 @@
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="static/js/bootstrap.min.js"></script>
 
-  </div><!-- /.container -->
-
-    <div class="container">
-      <div class="starter-template">
-        <h3>predicted number of buyers:</h3>
-        <p class="lead">{{the_result[0][0]}}</p>
-      </div>
-
-  </div><!-- /.container -->
-
-    <div class="container">
-      <div class="starter-template">
-        <h3>recommended price:</h3>
-        <p class="lead">${{price}}</p>
-      </div>
     
 
   </div> <!-- /.container-->
 
     <div class="container">
       <div class="starter-template">
-        <h3>related artists:</h3>
+        <h3>recommendations:</h3>
       </div>
 
       <table class="table table-hover">
-      <tr><th>artist</th><th># supporters</th><th>average price</th><th>approximate revenue</th></tr> 
-        {% for artist in artists %} 
-        <tr><td>{{artist['artist']}}</td><td>{{ artist['num_buyers']}}</td><td>{{artist['price'] }}</td><td>{{ artist['revenue'] }}</td></tr> 
+      <tr><th>Item Type</th><th>Price</th><th>Estimated Fraction of Sales</th></tr> 
+        {% for item in recommend %} 
+        <tr><td>{{item['item_type']}}</td><td>{{ item['item_price']}}</td><td>{{item['item_frac'] }}</td></tr> 
         {% endfor %} 
     </table> 
+    
+    </div><!-- /.container -->
+
+    <div class="container">
+      <div class="starter-template">
+        <h3>predicted revenue:</h3>
+        <p class="lead">{{predicted_revenue}}</p>
+      </div>
+    
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script> 
     <script src="static/js/bootstrap.min.js"></script> 
 
@@ -114,13 +108,6 @@
       <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
       <script src="static/js/bootstrap.min.js"></script>
 
-    </div><!-- /.container -->
-
-        <div class="container">
-          <div class="starter-template">
-            <h3>true number of buyers:</h3>
-            <p class="lead">{{the_result[1][0]}}</p>
-          </div>
 
      </div><!-- /.container -->
      

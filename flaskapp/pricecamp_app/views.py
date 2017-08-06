@@ -7,9 +7,7 @@ Created on Fri Jul 21 13:51:32 2017
 """
 from flask import render_template
 from pricecamp_app import app
-from pricecamp_app.a_Model import predictNumBuyers
-from pricecamp_app.a_Model import getRelatedArtists
-from pricecamp_app.a_Model import predictBestPrice
+import pricecamp_app.Models as pc 
 from sqlalchemy import create_engine
 from sqlalchemy_utils import database_exists, create_database
 import pandas as pd
@@ -51,21 +49,15 @@ def artist_input():
 def artist_output():
   #pull 'birth_month' from input field and store it
   artist_name = request.args.get('artist_name')
-    #just select the Cesareans  from the birth dtabase for the month that the user inputs
-  query = "SELECT * FROM artist_table_trimmed WHERE bc_artist='%s'" % artist_name
-  print(query)
-  query_results=pd.read_sql_query(query,con)
-  print(query_results)
-  results = getRelatedArtists(artist_name)
-  print(results)
-  related_artists = []
-  for i in range(0,results.shape[0]):
-      related_artists.append(dict(search_artist=artist_name,artist=results.iloc[i]['bc_artist'], num_buyers=results.iloc[i]['bc_num_supporters'],revenue=results.iloc[i]['bc_num_supporters']*results.iloc[i]['sales_avgprice'],price=results.iloc[i]['sales_avgprice']))
-      the_result = ''
-  the_result = predictNumBuyers(artist_name=artist_name,rel_artists = results)
-  print(the_result[0])
-  print(the_result[0] > 100)
-  price = predictBestPrice(y_predict = the_result[0])
-  print(related_artists)
+  artist_key = pc.getArtistKey(artist_name)
+  related_artists = pc.getRelatedArtists(artist_key=artist_key)
+  related_sales = pc.getRelatedSales(related_artists=related_artists)
+  rec_items = pc.recommendPrices(related_sales=related_sales)
+  num_sales = pc.predictNumBuyers(artist_key=artist_key)
+  predicted_revenue = pc.predictRevenue(rec_items=rec_items,num_sales=num_sales)
+  recommend = []
   
-  return render_template("output.html", artists = related_artists, the_result = the_result,price=price)
+  for i in range(0,rec_items.shape[0]):
+      recommend.append(dict(search_artist=artist_name,item_type=rec_items.iloc[i]['Type'],item_price=rec_items.iloc[i]['Price'],item_frac = rec_items.iloc[i]['Frac_Revenue']))
+  
+  return render_template("output.html", predicted_revenue=predicted_revenue,recommend=recommend)
