@@ -14,12 +14,12 @@ import pandas as pd
 import psycopg2
 from flask import request 
 
-user = 'shayneufeld' #add your username here (same as previous postgreSQL)                      
-host = 'localhost'
-dbname = 'music_db'
-db = create_engine('postgres://%s%s/%s'%(user,host,dbname))
-con = None
-con = psycopg2.connect(database = dbname, user = user)
+#user = 'shayneufeld' #add your username here (same as previous postgreSQL)                      
+#host = 'localhost'
+#dbname = 'music_db'
+#db = create_engine('postgres://%s%s/%s'%(user,host,dbname))
+#con = None
+#con = psycopg2.connect(database = dbname, user = user)
 
 @app.route('/')
 @app.route('/index')
@@ -30,15 +30,15 @@ def index():
 
 @app.route('/db')
 def artist_page(): #was birth page
-    sql_query = """                                                                       
-                SELECT * FROM artist_table_trimmed;          
-                """
-    query_results = pd.read_sql_query(sql_query,con)
-    popular_artists_inds = query_results.bc_avg_supporters.sort_values(ascending=False).index.values
-    popular_artists = query_results.loc[popular_artists_inds,'bc_artist']
-    d = {'artist':popular_artists,'num_followers':query_results.bc_avg_supporters.sort_values(ascending=False).values}
+#    sql_query = """                                                                       
+#                SELECT * FROM artist_table_trimmed;          
+#                """
+#    query_results = pd.read_sql_query(sql_query,con)
+#    popular_artists_inds = query_results.bc_avg_supporters.sort_values(ascending=False).index.values
+#    popular_artists = query_results.loc[popular_artists_inds,'bc_artist']
+#    d = {'artist':popular_artists,'num_followers':query_results.bc_avg_supporters.sort_values(ascending=False).values}
 
-    return popular_artists.values[0]
+    return #popular_artists.values[0]
     
     
 @app.route('/input')
