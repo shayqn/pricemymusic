@@ -8,4 +8,5 @@ Created on Fri Jul 21 13:53:36 2017
 
 #!/usr/bin/env python
 from pricecamp_app import app
-app.run(debug = True)
+#app.run(debug = True)
+app.run(host = '0.0.0.0')
