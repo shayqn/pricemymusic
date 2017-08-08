@@ -12,6 +12,9 @@ import pickle
 
 #variables to load in
 filepath = '/home/ubuntu/pricecamp'
+## DEBUG ON LOCAL COMPUTER
+filepath = '/Users/shayneufeld/GitHub/pricecamp'
+
 artist_table = pd.read_csv(filepath + '/data/artist_table.csv',index_col=0)
 als_model = pickle.load(open(filepath + '/models/als_model.sav', 'rb'))
 forest_model = pickle.load(open(filepath + '/models/rf_model.sav','rb'))

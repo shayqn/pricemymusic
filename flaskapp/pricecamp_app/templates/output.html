@@ -15,16 +15,55 @@
     <!-- Bootstrap core CSS -->
     <link href="../static/css/bootstrap.min.css" rel="stylesheet">
     
+    <!-- styling for the search query -->
+    <style>.tt-query {
+      -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+         -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+              box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    }
+    
+    .tt-hint {
+      color: #999
+    }
+    
+    .tt-menu {    /* used to be tt-dropdown-menu in older versions */
+      width: 422px;
+      margin-top: 4px;
+      padding: 4px 0;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      -webkit-border-radius: 4px;
+         -moz-border-radius: 4px;
+              border-radius: 4px;
+      -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+         -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+              box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    }
+    
+    .tt-suggestion {
+      padding: 3px 20px;
+      line-height: 24px;
+    }
+    
+    .tt-suggestion.tt-cursor,.tt-suggestion:hover {
+      color: #fff;
+      background-color: #0097cf;
+    
+    }
+    
+    .tt-suggestion p {
+      margin: 0;
+    }
+    </style>
+    
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+    <link href="../static/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="starter-template.css" rel="stylesheet">
-
-    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
-
+    <link href="../static/css/starter-template.css" rel="stylesheet">
+    
+    
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -33,7 +72,6 @@
   </head>
 
   <body>
-
     <nav class="navbar navbar-inverse navbar-fixed-top">
     <br><br>
       <div class="container">
@@ -58,8 +96,7 @@
 
     <div class="container">
     <div class="starter-template">
-        <h2>Output Page</h2>
-        <p>Enter some user input</p>
+        <h2>Results for {{recommend[0].search_artist}}</h2>
     </div>
 
     <div class = "container">
@@ -67,7 +104,7 @@
       <form  action="/output" method="GET">
         <div class="form-group">
           <label for="artist_name">artist name:</label>
-          <input type="text" id="artist_name" name='artist_name' placeholder=''>
+          <input type="text" id="artist_name" class="typeahead" name='artist_name' placeholder=''>
         </div>
         <div>
           <button type="submit" class="btn btn-default btn-lg">Search for artist</button>
@@ -75,8 +112,32 @@
       </form>
     </div>
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="static/js/bootstrap.min.js"></script>
+    <script src="../static/js/bootstrap.min.js"></script>
 
+
+    <script type="text/javascript">
+    $(document).ready(function(){
+        // Defining the local dataset
+        var artists = ['(Sandy) Alex G', ',,abrightfar,,', '...Of Sinking Ships', '1800HaightStreet', "1970's Film Stock", '28', '2814', '3 Ninjasks', '36 Questions', '5ive', '6Blocc', '6Blocc and J5', '6Blocc and Junior Demus', '6Blocc and Wulf', '6Blocc, Capitol City Rockers, Johnny Osbourne, Jigsy King, Junior Tiger, Sweetie Irie', '77 Rise Recordings', '8 Bit Weapon', '8 Bit Weapon & ComputeHer', "90's Bambino", 'A K A N E I N T O K I O', 'A Light in the Dark', 'A Scanner Darkly', 'A Stick And A Stone', 'A Thousand Hours', 'ACTORS', 'AIR Japan', 'ALEX', 'ALEX & Tokyo Rose', 'AMyn', 'ASC', 'ASOK', 'Aario Drgento', 'Abkehr', 'Abominable Putridity', 'Absolute Valentine', 'Abstract Elements', 'Abstracter', 'Acrania', 'Acuarela Project', 'Adhesive Sounds X Mhz通信販売', 'Aegri Somnia', 'Aeon', 'Afterbirth', 'Agent!', 'Ager Sonus', 'Agiel', 'Agrupacion Ilegal Los Imparciales', 'Aileron', 'Airi', 'Airospace', 'Al Dobson Jr', 'Alaric', 'Alder Deep', 'Alec Holowka', 'Alenda', 'Alex G', 'Alex_Palmtree', 'Alexander Rosetti', 'Alexandr Vaan Jo', 'Alfa Mist', 'Alix Perez', 'Alkalino', 'All India Radio', 'All India Radio with Steve Kilbey & Martin Kennedy', 'Alphaxone', 'Alphaxone & ProtoU', 'Alsarah & The Nubatones', 'Alt3r3d Stat3', 'Altarage', 'Alterbeast', 'Alvvays', 'Amani vs Teapot', 'Ambivalent', 'Amit', 'Amorce', 'Anatomia De Vanitats', 'Ancient VVisdom', 'Anderson .Paak', 'Andrew Applepie', 'Andy Cooper', 'Angel Dust', 'Anicon', 'Annihilated', 'Anomalie', 'Anton Zap', 'Anubis', 'Aoki Yutaka', 'Apocryphos', 'Apocryphos, Kammarheit, Atrium Carceri', 'Applaud the Impaler', 'Aquilus', 'Aramboa', 'Arch Echo', 'Ark Church, Dnepropetrovsk, Ukraine', 'Arkaik', 'Arms Aloft', 'Aseptic Void', 'Ash Borer', 'Aso', 'Asobi Seksu x Boris', 'Astronoid', 'Astrovino', 'Athens Of The North', 'Atrament', 'Atrium Carceri', 'Atrium Carceri & Eldar', 'Atum', 'Aughra', 'Aughra & Mosh Patrol', 'Aurastys', 'Aureole', 'Aurora Borealis', 'Austin Lucas', 'AutoDestructionNeeded', 'Auxiliary God', 'Aveparthe', 'Aversio Humanitatis', 'Avey Tare', "Avey Tare's Slasher Flicks", 'Aviators', 'Axian', 'Axton Frick', 'Axxuell', 'Azrael-II', 'Azure Blue', 'B-Side', 'BAB', 'BACKWHEN', 'BANDETTO', 'BLACK LABEL', 'BLACKSEA NÃO MAYA', 'BOOL', 'BOOL & canooooopy', 'BORIS', 'BURNING FLAG', 'BYSON', 'Baby Alchemy', 'Bachelor of Hearts', 'Barghest', 'Bartellow', 'Bassline Bangers', 'Bassti', 'Bastard Sapling', 'Beach House', 'Beheaded', 'Bei Bei & Shawn Lee', 'Bellemaison', 'Bellhop', 'Beneath', 'Benoît Pioulard', 'Bering Strait', 'Beyond Value', 'Big Big Train', 'Big China & Little Trouble', 'Big Thief', 'Bileo', 'Bill Botting & The Two Drink Minimums', 'Bill Botting and the Two Drink Minimums', 'Birth of Frequency', 'Bizarre Myceté Forêt', 'Blac Kolor', 'Black Army Jacket', 'Black Arrows Of Filth & Impurity', 'Black Magic Tamarak', 'Black Mare & Lycia', 'Black Nail Cabaret', 'Black Noise', 'Black Patterns', 'Blackpocket', 'Blanco', 'Blank Banshee', 'Blasé', 'Bleach Everything', 'Bleach Everything & VORS', 'Bloodtruth', 'Blush Response', 'Bodyline', 'Bolide', 'Bonobo', 'Bonus Points', 'Boots For Dancing', 'Boozoo Bajou', 'Boreal Network', 'Boris', 'Boss Kong', 'Boston 168', 'Boy Harsher', 'Boy Sets Fire', 'Brass Cinema', 'Breadth Formed', 'Brent Kennedy', 'Brian Ellis', 'Brian Ellis Group', 'Bright Sea', 'Brillo', 'Bristles on the Carapace', 'Brock Berrigan', 'Brojanowski', 'Broken Machine Films presents...', 'Brooklyn Gypsies', 'Brown Bird', 'Bruce Trail', "Brujo's Bowl", 'Brujos Bowl', 'Brutus', 'Bryan Chapman', 'Bubba Suggs', 'Bucketheadland', 'Buildings', 'Bulla en el Barrio', 'Bungalo Dub featuring Macka B', 'Bungalo Dub featuring Macka B and El Aaron', 'Burial', 'CD Bundles', 'CGI Gold™ 複合', 'CHELSEA WOLFE', 'COAG', 'COCAINEJESUS', 'COLA可樂巫術NECROMANCY', 'COM.A', 'CORN ON MACABRE', 'COSMIC CYCLER', 'COSMIC TOUCH', 'CTO & Ray Sherman', 'CVLTVRE', 'CVLTVRΣ', 'CVLTVRΣ and Form', 'Calibre', 'CanalDub', 'CapriRoulette', 'Car Seat Headrest', 'Carmelo Torres y Los Toscos', 'Carnophage', 'Carpenter Brut', 'Cave In', 'Cavernlight', 'Celer', 'Celldweller', 'Cerebral Dub', 'Chancha Via Circuito', 'Change Of Heart', 'Channeling', 'Chaos In The CBD', 'Charles Manson', 'Chelsea Wolfe & King Dude', 'Chicha Dust', 'Chillhop Records', 'Chimpo', 'Chore', 'Christian Scott', 'Christian Scott aTunde Adjuah', 'Christie Front Drive', 'Chungking Mansions', 'Chungking Mansions and m a l i b l u e : (', 'Circa Tapes', 'Cities Last Broadcast', 'Citrus Glaze', 'Clanadonia', 'Clarity', 'Clark "Plazmataz" Powell', 'Clinton Green', 'Closet Witch', 'Cloud Boat', 'Cloudz', 'Code 3', 'Cognitive', 'Coliseum & Doomriders', 'Com Truise', 'Combo Chimbita', 'Common Eider, King Eider', 'ComputeHer', 'Computer Graphics', 'Condemned', 'Consequence', 'Contemptus Mundi', 'Continuum', 'Contours', 'Converge', 'Cormorant', 'Corpo-Mente', 'Cosines', 'Cosmic Cycler', 'Cosmic Fall', 'Cosmic Fall, Aphodyl', 'Costanza', 'Couch Slut', 'Council of Nine', 'Council of Nine, Alphaxone, Xerxes The Dark, Wolves and Horses', 'Creation VI', 'Crestfallen', 'Crimson Spectre & Uwharria', 'Crossing The Atlantic', 'Crumb', 'Cruz', 'Cryo Chamber', 'Cryo Chamber Collaboration', 'Cryobiosis', 'Curb Cobain', 'Curb Cobain and Famicom Fountains', 'Cynthia Lin', 'Cynthia Lin and the Blue Moon All Stars', 'Cytotoxin', 'D.Dan', 'DANCE WITH THE DEAD', 'DANG OLSEN DREAM TAPE', 'DARKPYRAMID', 'DEADLIFE', 'DJ 0.000001', 'DJ ALINA', 'DJ D003Y', 'DJ DJ TANNER and Memory Leaks Onto The Rug', 'DJ FIRMEZA', 'DJ Frenzy', 'DJ Heure', 'DJ Khalab & Baba Sissoko', 'DJ Kush Boogie', 'DJ MARFOX', 'DJ NERVOSO', 'DJ NIGGA FOX', 'DJ Pierre & Marshall Jefferson', 'DJ Seinfeld', 'DJ Sonikku', 'DJ Wave', 'DKA Records', 'DMVU', 'DMVU, Dalek One', 'DOROSOTO', 'DOWNLOAD', 'DR00', 'DREAMCULTURE', 'DSR.MR', 'DSX', 'DVNE', 'DVS1', 'Dan Kye', 'Dan Terminus', 'Daniel Kitson', 'Daniel Kitson and Gavin Osborn', 'Danit', 'Danny Baranowsky', 'Danny Baranowsky, Grant Kirkhope', 'Darius', 'Darius + Rotteen', 'Dark Matter', 'Darkhouse Family', 'Darkman', 'Darren Hayman', 'Darren Hayman & The Short Parliament', 'David Procyshyn', 'Dawn of Demise', 'Days N Daze', "Days N' Daze", 'Daze', 'Dead Astronauts', 'Dead Cross', 'Dead Melodies', 'Dead to a Dying World', 'Deceptionist', 'Decrepit Birth', 'Deeb', 'Deeds of Flesh', 'Deep Dark & Dangerous', 'Delve', 'Demonstration Synthesis', 'Deprecated', 'Desert Dwellers', 'Desired', 'Destroyer of Light', 'Destroying the Devoid', 'Detriti Records', 'Devan Boomen', 'Devolved', 'Devourment', 'Dexis', 'Deya Dova', 'Dharana', 'Diamondstein', 'Die', 'Digital Velvet', 'Diksha', 'Dip In The Pool', 'Dirty Grave', 'Dirty Hippy', 'Dirty Hippy vs Evil Oil Man', 'Disappearer', 'Disasterpeace', 'Disavowed', 'Disgorge', 'Distant Worlds: music from FINAL FANTASY', 'Divider', 'Div|der', 'Dj Curious', 'Djuma Soundsystem & Westerby', 'DoYogaWithMe', 'Docetism', 'Dominion', 'Don Leisure', 'Donovan Hikaru', 'Donovan Hikaru and 豊平区民TOYOHIRAKUMIN', 'Dot Product', 'Dr Strangefunk', 'Dream Catalogue', 'Dream Machine', 'Dream Void', 'Dreamhour', 'Dreamstalker', 'Drive Radio', 'Dronny Darko', 'Dronny Darko & protoU', 'Dropout Marsh', 'Drumspyder', 'Dub Phizix', 'Dub Phizix & Skeptical', 'Dubape, Scooped, Sepia', 'Duke Hugh', 'Dustin D Fingers', 'Dustin Zahn', 'Dustin Zahn & Emmanuel', 'Dynatron', 'Dyscarnate', 'Dysmorphic', 'EIGHTXNIGHTS', 'ENVIRON 案件', 'EPROM', 'Earth Trax X Newborn Jr.', 'East of Underground', 'Eat Their Crusts', 'Edamame', 'Edgelarks: Phillip Henry and Hannah Martin', 'Edit Select & Dustin Zahn, UZB', 'Eksi Ekso', 'El Búho', 'Ela Orleans', 'Elder', 'Electric Specter 電妖怪', 'Electrypnose', 'Emmanuel', "Enderby's Room", 'Endless Melancholy', 'Endurance', 'Eneferens', 'Enemy Records', 'Enis Bronson', 'Enmarta', 'Entheo', 'Equip', 'Erik "Jit" Scheele', 'Erphun', 'Eschaton', 'Estas Tonne', 'Estas Tonne & One Heart Family', 'Estas Tonne, Dimitri Artemenko', 'Estas Tonne, Giedrius Dagys, Leon Galperin', 'Estas Tonne, Netanel Goldberg, Joseph Pepe Danza, Mitsch Kohn', 'Estas Tonne, Peter Moore, Victoria Grebezs,  J Rokka', 'Euphoric Defilement', 'Evan A. James', 'Evil Oil Man', 'Ex Eye', 'Exit Records UK', 'Extra Classic', 'FENIMORE夢', 'FIRMA DO TXIGA', 'FM-84', 'FORCES', 'FVLCRVM', 'FYI Chris', 'Fallgrapp', 'Fallujah', 'Famicom Fountains', 'FarragoL', 'Fazerdaze', 'Fearofdark', 'Fell Voices', 'Feral Light', 'Few Nolder', 'Filthy Casuals with Tommy Dassalo, Ben Vernel and Adam Knox', 'Finlii', 'First Fragment', 'Fit Of Body', 'Fixate', 'Fla.mingo', 'Flagland', 'Flamingosis', 'Flamingosis x Tokyo Megaplex', 'Flash Kostivich', 'Flesh Consumed', 'Flitz&Suppe', 'Florian MSK', 'Florist', 'Flowers for Bodysnatchers', 'Fluence', 'Flug', 'Flug & UZB', 'Fold', 'Forensics', 'Form', 'Forma', 'Forrest Terry', 'Foxful', 'Fracture', 'Fracture ft. Dawn Day Night', 'Frank Ferrer', 'Frazelle', 'Frequent C', 'Friendship', 'Frodus', 'Fruit', 'Fuji Kureta', 'Fujitsu', 'Fulhäst', 'Funerary', 'Fungophago', 'Fureon Nectarmoon', 'Future City Love Stories', 'Futurecop!', 'Fórn', 'GH', 'GHOSTEMANE', 'GLGN', 'GLGN feat. DADA', 'GOLDEN LIVING ROOM', 'GOLDEN LIVING ROOM and t e l e p a t h テレパシー能力者', 'GROARK', 'GVMBON', 'GYVUS', 'Gacha Bakradze', 'Gallery Six', 'Garoad', 'Garrett David', 'Gaspar Poet', 'Gateway', 'Genotype', 'Genteel Decay', 'Get Rad', 'Ghost-Note', 'Giant Claw', 'Gilmer Galibard', 'Gire', 'Gloam', 'Gnork', 'Go-qualia', 'Goat', 'God Body Disconnect', 'Golden Hostage', 'Good Game', 'Gorgasm', 'Gorila', 'Gorod', 'GosT', 'Grammar Of Movement', 'Grand Canyon Spring Breaks', 'Grant', 'Green Bay Wax', 'Grey Aura', 'GreyscaleSound', 'Griffin McElroy', 'Groove Hunter', 'Grouch', 'Grub', 'Gunwale', 'GutterBoy + SKANK', 'Gyoza District', 'HALLEY HARD SOUND UNIT', 'HALLEY LABS', 'HCMJ', 'HEALAMONSTER', 'HKE', 'HLLW', 'HOME', 'HOTLINE', 'HV$VH', 'Haana', 'Haircuts For Men', 'Halftribe', 'Halgrath', 'Halley Labs Associates', "Hallmark '87", 'Halo of Gunfire', 'Hammock', 'Hammock, Steve Kilbey & timEbandit Powles', 'Hampshire & Foat', 'Haramia Tapes', 'Hard Drivers', 'Harmonic Cross', 'Haujobb', 'Haunt', 'Have a Nice Day!', 'Headless Dogs', 'Heart Drive', 'Heaters', 'Hedge Maze', 'Helen Love', 'Hell', 'Heller Mason', 'Hellquist', 'Helvetia', 'Henri Texier', 'Henry Thomas & Rise', 'Henry Wu', 'Herr Doktor', 'Hexer', 'Hidden Spheres', 'Hideous Divinity', 'High-Functioning Flesh', 'Highness', 'Himalayan Dalai Lama', 'Hippy Soul', 'Holy Fuck', 'Homegrown Syndrome', 'Homestuck', 'Hong Kong Express', 'Hoodz', 'Hoshin', 'Hot Since 82', 'Hour of Penance', 'Howling Giant', 'Hypogeo', 'I Awake', 'I am just a Pupil', 'IGBOOGA', 'INTRCPTR', 'ITPDWIP', 'Icaro', 'Icore', 'Ides of Gemini', 'Ido & Treavor Moontribe', 'Idris Rahman, Leon Brichard, Emre Ramazanoglu, Satin Singh', 'Idris Rahman, Leon Brichard, Emre Ramazanoglu, Yahael Camara-Onono', 'Idris Rahman, Leon Brichard, Tom Skinner', 'Ifing', 'Igorrr', 'Illuminated Paths and Broken Machine Films presents...', 'Imber Luminis', 'Immersed', 'Implodes', 'Imre Kiss', 'Inanimate Existence', 'Indigo', 'Indricothere', 'Infinity Frequencies', 'Inherit Disease', 'Instra:mental', 'Integrity', 'Integrity & Power Trip', 'Internal Bleeding', 'Internal Suffering', 'Inveracity', 'Invoking the Abstract', 'Iron Bonehead Productions', 'Irreversible Mechanism', 'Ishola Muhammad', 'Ital', 'Ivort', 'J.O.B Band', 'JAQL', 'Jack Cates', 'Jackal Queenston', 'Jackal Queenston + NegaRen', 'Jade Statues', 'Jake "virt" Kaufman', 'Jake Kaufman', 'Jakub Zytecki', 'James Benjamin', 'Japanese Treats', 'Jarith', 'Jax Transit Authority', 'Jay Som', 'JayLotus', 'Jazzuelle & Lars Behrenroth Feat. Tamara Dey', 'Je$u$', 'Jeremy "Solatrus" Iamurri', 'Jeremy Gluck and Michael Dent', 'Jeremy White', 'Jesuit', 'Jesus Selin', 'Jimmy Pe(e)', 'Jimmy Pé', 'Joe Seven', 'Jon Fay', 'Jordan Anderson', 'Jordan F', 'Joseph Nothing Orchestra', 'Jota Karloza', 'Jota Karloza ~ Lemurian ~ Dubelu', 'Judd Madden', 'Judiciary', 'Junior', 'Jute Gyte', 'K, Le Maestro', 'KASHIWA Daisuke', "KASHIWA Daisuke, world's end girlfriend", 'KITCALIBER', 'Kabayun', 'Kabayun, Drip Drop', 'Kabi', 'Kaidi Tatham', 'Kalumet', 'Kamikabe', 'Kamikaze Space Programme', 'Karcavul', 'Karen Gwyer', 'Karl Fousek', 'Kasket', 'Katalepsy', 'Katie Von Schleicher', 'Kauan', 'Kaziel', 'Kemper Norton', 'Kenji', 'Keosz', 'Khel', 'Khruangbin', 'Kid Drama', 'Kid Lib & Percussive P', 'Killawatt', 'King Britt Presents: Sister Gertrude Morgan', 'King Gizzard & The Lizard Wizard', 'Kitsune²', 'Kliment', 'Klippa', 'Klipsun', 'Knowmadic', 'Knx.', 'Knxwledge', 'Knxwledge.', 'Koala Bear the Person', 'Kobayashi Yamato', 'Kolhoosi 13', 'Kowloon Walled City', 'Krallice', 'Kreambeat', 'Kronos', 'Krumelur', 'Kryptic Minds', 'Kryptic Minds & Killawatt', 'Ku-raku', 'Kurt Signs', 'Kyonpalm', 'Köshrimp', 'Kösmonaut', "L'Indécis", "L'Orange & Mr. Lif", 'LAST STEP', 'LAVA LAMP SPACESHIP', 'LENT', 'LES 手のひら', 'LFTHHC SQUAD', 'LIGHTNING', 'LILA TIRANDO A VIOLETA', 'LILLITH双生', 'LORN', 'LOV3 MOT3L', 'LUZ1E', 'LYOKHA', 'La IBI & Sovereign Grace Music', 'La Mont Zeno Theatre', 'Laboratorium Pieśni', 'Lagartijeando', 'Lahun', 'Lake Of Violet', 'Lamitina', 'Lance Neptune', 'Land Of Light', 'Laserdisc Visions', 'Laserprint Tech.', 'Lavender Lagoon', 'Lazerhawk', 'Leather Glove', 'Lecherous Nocturne', 'Lee Larson', 'Leisure Centre', 'Leisure Centre and Finlii', 'LemKuuja', 'Lemurian', 'Lemurian ~ Jota Karloza', 'Leroy Hutson', 'Less Art', 'Leucrota', 'Lew Kirton', 'Lights And Sirens', 'Lights Dim & Endless Melancholy', 'Limousine', 'Liquid Bloom & Numatik', 'Little Blue', 'Lobster Theremin', 'Logic Moon', 'Lone', 'Lord Echo', 'Lord Julien', 'Lord of War', 'Lordamercy', 'Lortica', 'Loser Life', 'Louie Larceny', 'Loxy & Resound', 'Luca Venezia', 'Lucid Sound Driver', 'Lucy Camp', 'Luke Mandala', 'Lump Records', 'Lycan Dese Beats', 'Lychgate', 'Lymbyc Systym', 'M U L T I C I N E X', 'M a l i b l u e : (', 'M.O.O.N.', 'MASTER BOOT RECORD', 'MEME VIVALDI', 'METAPHYSIS', 'MHYSA', 'MIKE', 'MONOGUM', 'Macerie', 'MachineSpeaks', 'Macintosh Plus', 'Magic Arrows', 'Magic Arrows, The Innernettes, TREASURE HUNT and Strange Mountain', 'Magic Sword', 'Maitro', 'Majority Rule', 'Making Marks', 'Malphino', 'Manchac Networks', 'Manni Dee', 'Manon Meurt', 'Marcus Intalex', 'Mark & Stephen Altrogge', 'Mark Hadley', 'Mark Lettieri', 'Mark System', 'Market Square Recordings', 'Martin Kennedy', 'Martins Garden', 'Martins Garden & Friends', 'Marzebian', 'Math and Physics Club', 'Matt Bloom', 'Matthew Bertram', 'Matthew Melton', 'Mayhem', 'Meatwound', 'Mega Drive', 'Mega Flare', 'Melodiesinfonie', 'Melvins', 'Memory Leaks Onto The Rug', 'Meneguar', 'Merda Mundi', 'Merkaba', 'Metatron Omega', 'Meteor', 'Mgła', 'Miami Vice', 'Michael Guy Bowman', 'Michal Turtle', 'Microbe', 'Millivolt', 'Milton Wright', 'Mind Mold', 'MindSpring Memories', 'Minilogue', 'Minimal Violence', 'Miracle Of Sound', 'Mirror Me', 'Mississippi Bones', 'Mistress Fannypack', 'Mitski', 'Mobius Collective', 'Module Eight', 'Module Virus', 'Moe J Simpson', 'Moe J. Simpson', 'Molly Nilsson', 'MonoNeon', 'MonoNeon & Michael Vick', 'MonoNeon, Jerome Flood & Kriswontwo', 'Monophobe', 'Mood J', 'Moodcut', 'Moon Frog', 'Morgan Willis', 'Morris County Meteorological Team', 'Mortal Decay', 'Mortiis', 'Moscoman', 'Mose Robert', 'Mounika.', 'Moustache Of Insanity', 'Mr. Lif', 'Mr. Lif & Akrobatik (The Perceptionists)', 'Mr. Wigg & Co.', 'Mr. YT', 'Multiple Man', 'Music From Memory', 'Mute Speaker', 'Mutilation Rites', 'My Kingdom', 'My Little Pony', 'Myown', 'Myrkur', 'Mystery Skulls', 'Mystified', 'Mønic', 'N-qia', 'NAROPA RAUDIVE', 'NEW WORLD PICTURES', 'NIAGARA', 'NORM CHAMBERS', 'NORMAL NADA', 'NVMERI', 'NY in 64', 'Na Band', 'Nadddir', 'Nadine Shah', 'Nancy Azzurro', 'Nangijala', 'Naztek - R.A.W. - M27', 'Near Death Condition', 'Nechayev', 'Necronimicon', 'Necrot', 'NegaRen', 'Neizvestija', 'Nelda Pina y La Boa', 'Neon Unicorn', 'NeonTropix', 'Neoslave', 'Nervecell', 'Nervous Horizon', 'New Arcades', 'New Dreams Ltd.', 'New World', 'New York Haunted', 'NewRetroWave', 'Nichts', 'Nickodemus', 'Nickodemus & Alsarah', 'Nickodemus & Brian J', 'Nickodemus & Goodtimes Events present:', "Nickodemus & Justin Carty + 24 MC's Worldwide", 'Nickodemus & Osiris featuring Carol C', 'Nickodemus feat Hassan Ben Jaafer & Innov Gnawa', 'Nickodemus feat MCs Shinpeita, Simon Jap, Pony & D.D.S. The Suke', 'Nickodemus feat Sammy Ayala (Whiskey Barons Remix)', 'Nickodemus feat. BAM & The Real Live Show', 'Nickodemus feat. MCs Toofless, Jibberish, Ed Hooligan & Eslam Jawaad', 'Nickodemus feat. The Real Live Show', 'Nickodemus featuring Carol C', 'Nickodemus presents:', 'Nickodemus, Zeb, Balkan Beat Box', 'Night Tempo', 'Nik Viola', 'Nikola  Gala', 'Nikola Gala', 'Niky Nine', 'Nitro Tokyo', 'Niukid', 'Nmesh and t e l e p a t h テレパシー能力者', 'No Moon', 'Nobody', 'Noisesurfer', 'Nokae', 'Noname', 'None', 'Noneuclid', 'Northless', 'Northumbria', 'Nouveau Life™', 'Novalima', 'Nu Era', 'Nubia', 'Null + Void', 'NØD', 'O A K   M I L K', 'O c e a n  S h o r e s', 'OMI5', 'ORAX', 'OSCOB and「サンセット Ｎｅｔｗｏｒｋ❾❶」', 'Oariana', 'Oblivion', 'Occer', 'Odd Nosdam', 'Oddlogic', 'Odious Mortem', 'Oliver Tate', 'Om Unit & Sam Binga', 'Omebi', 'Omnihility', 'Omophagia', 'On Fire', 'One Tasty Morsel', 'Only Swallow', 'Orange Crush', 'Orangebirthday', 'Orquesta Pandroginia', 'Osataniliy Gniv', 'Oscar S', 'Osiris Music uk', 'Otto Rollo', 'Ovids Withering', 'Owl & Mouse', 'Ozel AB', 'P A T H S パス', 'P-shirts', 'PALACIO DEL RIO', 'PASSAGE', 'PERILS', 'PERTURBATOR', 'PETRIDISCH', 'PLAYA', 'PLAYA x KID NY', 'PLAYA x TIGHT EYEX', 'PLAYA x TIGHT EYEZ x MMP', 'PSURG Sound Team', 'PZA', 'Pablo Queu', 'Pablo Sanchez featuring Colonel Red', 'Pacific Star', 'Pageninetynine & Majority Rule', 'Palace of Worms', 'Pale Chalice', 'Pale Rider', 'Paleowolf', 'Palomica', 'Panthera Krause', 'Papadosio', 'Paracozm', 'Paradizzle', 'Paul Hares', 'Paws Menu', 'Peak', 'Penny Goodwin', 'People Like You', 'Pernett', 'Persekutor', 'Perturbator', 'Pessimist', 'Pete Fij', 'Peter Power', 'Peter Power & Friends', 'Petrification', 'Phasenverschiebungen', 'Philanthrope x tusken.', 'Phillip Henry', 'Phoenix #2772', 'Phonothek', 'Pick', 'Pillory', 'Pinegrove'];
+        // Constructing the suggestion engine
+        var artists = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            local: artists
+        });
+        
+        // Initializing the typeahead
+        $('.typeahead').typeahead({
+            hint: true,
+            highlight: true, /* Enable substring highlighting */
+            minLength: 1 /* Specify minimum characters required for showing suggestions */
+        },
+        {
+            name: 'artists',
+            source: artists
+        });
+    });  
+    </script>
     
 
   </div> <!-- /.container-->
@@ -102,14 +163,15 @@
       </div>
     
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script> 
-    <script src="static/js/bootstrap.min.js"></script> 
+    <script src="../static/js/bootstrap.min.js"></script> 
 
 
       <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-      <script src="static/js/bootstrap.min.js"></script>
-
-
-     </div><!-- /.container -->
+      <script src="../static/js/bootstrap.min.js"></script>
+     
+        
+      
+      </div><!-- /.container -->
      
      
 
@@ -118,11 +180,15 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-    <script src="../../dist/js/bootstrap.min.js"></script>
+    <script src="../static/js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="../static/js/ie10-viewport-bug-workaround.js"></script>
     
-    <script src="static/js/bootstrap.min.js"></script>
+    <script src="../static/js/bootstrap.min.js"></script>
+    
+    <script src="../static/js/jquery-3.2.1.min.js"></script>
+    <script src="../static/js/typeahead.js"></script>
+    
     
   </body>
 </html>
