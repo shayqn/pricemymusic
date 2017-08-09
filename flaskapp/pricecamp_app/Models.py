@@ -11,16 +11,13 @@ import pickle
 
 
 #variables to load in
-filepath = '/home/ubuntu/pricecamp'
-## DEBUG ON LOCAL COMPUTER
-#filepath = '/Users/shayneufeld/GitHub/pricecamp'
+artist_table = pd.read_csv('../data/artist_table.csv',index_col=0)
+als_model = pickle.load(open('../models/als_model.sav', 'rb'))
+forest_model = pickle.load(open('../models/rf_model.sav','rb'))
+album_features = pd.read_csv('../data/album_features.csv',index_col=0)
+prices_genres_features = np.loadtxt('../data/prices_genres_features.csv')
+sales_df = pd.read_csv('../data/sales.csv',index_col=0)
 
-artist_table = pd.read_csv(filepath + '/data/artist_table.csv',index_col=0)
-als_model = pickle.load(open(filepath + '/models/als_model.sav', 'rb'))
-forest_model = pickle.load(open(filepath + '/models/rf_model.sav','rb'))
-album_features = pd.read_csv(filepath + '/data/album_features.csv',index_col=0)
-prices_genres_features = np.loadtxt(filepath + '/data/prices_genres_features.csv')
-sales_df = pd.read_csv(filepath + '/data/sales.csv',index_col=0)
 
 def predictNumBuyers(artist_key=[], model = forest_model,features=prices_genres_features,data=album_features):
     #use random forest classifier to predict how an album will sell
