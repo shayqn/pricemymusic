@@ -1,2 +1,2 @@
 # pricecamp
-web app to help artists optimally price their music
+market insights for musicians
