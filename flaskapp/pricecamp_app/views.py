@@ -24,9 +24,8 @@ from flask import request
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template("index.html",
-       title = 'Home', user = { 'nickname': 'Shay' },
-       )
+
+    return render_template("input.html")
 
 @app.route('/db')
 def artist_page(): #was birth page
