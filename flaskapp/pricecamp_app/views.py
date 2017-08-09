@@ -37,12 +37,12 @@ def artist_page(): #was birth page
 #    popular_artists_inds = query_results.bc_avg_supporters.sort_values(ascending=False).index.values
 #    popular_artists = query_results.loc[popular_artists_inds,'bc_artist']
 #    d = {'artist':popular_artists,'num_followers':query_results.bc_avg_supporters.sort_values(ascending=False).values}
-
-    return #popular_artists.values[0]
+    return
     
     
 @app.route('/input')
 def artist_input():
+
     return render_template("input.html")
 
 @app.route('/output')
