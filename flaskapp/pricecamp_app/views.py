@@ -58,5 +58,5 @@ def artist_output():
   
   for i in range(0,rec_items.shape[0]):
       recommend.append(dict(search_artist=artist_name,item_type=rec_items.iloc[i]['Type'],item_price=rec_items.iloc[i]['Price'],item_frac = rec_items.iloc[i]['Frac_Revenue']))
-  
+  print(recommend)
   return render_template("output.html", predicted_revenue=predicted_revenue,recommend=recommend)

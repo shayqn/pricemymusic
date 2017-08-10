@@ -87,25 +87,31 @@ def recommendPrices(related_sales = []):
     for col in price_analysis.columns.values:
         if price_analysis.loc['Frac_Revenue',col] > 0.2:
             rec = rec.append(price_analysis[col])
+        else:
+            price_analysis.loc['Frac_Revenue',col] = 0 #if not 0ver 20%, set fraction to 0
+            price_analysis.loc['Price',col] = 0 #if not 0ver 20%, set fraction to 0
+            rec = rec.append(price_analysis[col])
+            
     
-    #re-normalize the fraction revenue column to sum to 1 with the recomended items
+    #re-normalize the fraction revenue column to sum to 1 with the recomended items greater than 20% (other ones are 0)
     rec['Frac_Revenue'] = np.round(rec.Frac_Revenue.values / rec.Frac_Revenue.values.sum(),2)
     
     #add type of item to the dataframe
     items = []
     for item in rec.index.values:
         if item == 'a':
-            items.append('digital download')
+            items.append('digital album')
         elif item == 'p':
-            items.append('physical album')
+            items.append('physical')
         elif item == 'b':
-            items.append('bundle of merch')
+            items.append('bundle')
         elif item == 't':
-            items.append('track download')
+            items.append('track')
     
     rec['Type'] = items
     rec = rec.drop('Revenue',axis=1)
     return rec
+
 
 
 def predictRevenue(rec_items=[],num_sales=[]):
