@@ -28,10 +28,10 @@ def index():
 
     return render_template("input.html")
 
-#@app.route('/static/graphic.png',methods=['GET'])
-#def get_image():
-# filename = './static/graphic.png'
-# return send_file(filename, mimetype='image/png')
+@app.route('/graphic',methods=['GET'])
+def get_image():
+ filename = 'static/graphics/pmm_graphic.png'
+ return send_file(filename, mimetype='image/png')
     
     
 @app.route('/input')
