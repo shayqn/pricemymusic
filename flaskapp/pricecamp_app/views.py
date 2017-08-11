@@ -13,6 +13,7 @@ from sqlalchemy_utils import database_exists, create_database
 import pandas as pd
 import psycopg2
 from flask import request 
+from flask import send_file
 
 #user = 'shayneufeld' #add your username here (same as previous postgreSQL)                      
 #host = 'localhost'
@@ -27,16 +28,10 @@ def index():
 
     return render_template("input.html")
 
-@app.route('/db')
-def artist_page(): #was birth page
-#    sql_query = """                                                                       
-#                SELECT * FROM artist_table_trimmed;          
-#                """
-#    query_results = pd.read_sql_query(sql_query,con)
-#    popular_artists_inds = query_results.bc_avg_supporters.sort_values(ascending=False).index.values
-#    popular_artists = query_results.loc[popular_artists_inds,'bc_artist']
-#    d = {'artist':popular_artists,'num_followers':query_results.bc_avg_supporters.sort_values(ascending=False).values}
-    return
+@app.route('/static/Data/graphic.png',methods=['GET'])
+def get_image():
+ filename = './static/graphic.png'
+ return send_file(filename, mimetype='image/png')
     
     
 @app.route('/input')
