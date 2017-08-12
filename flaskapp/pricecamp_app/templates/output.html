@@ -238,83 +238,83 @@
     }); 
     </script>
     
-    <div id="pieChart" style="text-align: center;"></div>
     
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3/4.7.2/d3.min.js"></script>
-    <script src="{{url_for('static',filename='js/d3pie.min.js')}}"></script>
+    <script src="../static/js/d3pie.min.js"></script>
     
+    <div id="pieChart" style="text-align:center"></div>
+
     <script>
     var pie = new d3pie("pieChart", {
     	"header": {
     		"title": {
-    			"text": "Predicted Fraction Revenue",
-    			"fontSize": 22,
-    			"font": "verdana"
+    			"text": "Products",
+    			"fontSize": 48,
+    			"font": "courier"
     		},
     		"subtitle": {
-    			"text": "subtitle could go here",
-    			"color": "#999999",
-    			"fontSize": 10,
-    			"font": "verdana"
+    			"text": "Predicted fraction of total revenue",
+    			"color": "#6e7174",
+    			"fontSize": 12,
+    			"font": "courier"
     		},
+    		"location": "pie-center",
     		"titleSubtitlePadding": 12
     	},
     	"footer": {
-    		"text": "",
     		"color": "#999999",
-    		"fontSize": 11,
+    		"fontSize": 10,
     		"font": "open sans",
-    		"location": "bottom-center"
+    		"location": "bottom-left"
     	},
     	"size": {
-    		"canvasHeight": 600,
-    		"canvasWidth": 885,
-    		"pieOuterRadius": "93%"
+    		"canvasWidth": 590,
+    		"pieInnerRadius": "87%",
+    		"pieOuterRadius": "73%"
     	},
     	"data": {
+    		"sortOrder": "label-desc",
     		"content": [
     			{
     				"label": "digital album",
-    				"value": {{recommend[0]['item_frac']}},
-    				"color": "#0b8bf3"
+    				"value": 2,
+    				"color": "#2383c1"
     			},
     			{
     				"label": "bundle",
-    				"value": {{recommend[1]['item_frac']}},
-    				"color": "#19ae24"
+    				"value": 10,
+    				"color": "#64a61f"
     			},
     			{
     				"label": "digital track",
-    				"value": {{recommend[2]['item_frac']}},
-    				"color": "#b43ac3"
+    				"value": 8,
+    				"color": "#7b6788"
     			},
     			{
     				"label": "physical album",
-    				"value": {{recommend[3]['item_frac']}},
-    				"color": "#000000"
+    				"value": 10,
+    				"color": "#a05c56"
     			}
     		]
     	},
     	"labels": {
     		"outer": {
-    			"pieDistance": 32
+    			"format": "label-value2",
+    			"pieDistance": 20
     		},
     		"inner": {
-    			"format": "value"
+    			"format": "none"
     		},
     		"mainLabel": {
-    			"font": "verdana",
     			"fontSize": 18
     		},
     		"percentage": {
-    			"color": "#333333",
-    			"font": "verdana",
-    			"fontSize": 18,
+    			"color": "#999999",
+    			"fontSize": 11,
     			"decimalPlaces": 0
     		},
     		"value": {
-    			"color": "#e1e1e1",
-    			"font": "verdana",
+    			"color": "#797977",
     			"fontSize": 18
     		},
     		"lines": {
@@ -325,15 +325,31 @@
     			"enabled": true
     		}
     	},
+    	"tooltips": {
+    		"enabled": true,
+    		"type": "placeholder",
+    		"string": "{label}: {value}, {percentage}%",
+    		"styles": {
+    			"fadeInSpeed": 252,
+    			"backgroundOpacity": 0
+    		}
+    	},
     	"effects": {
     		"pullOutSegmentOnClick": {
-    			"effect": "linear",
+    			"effect": "elastic",
     			"speed": 400,
     			"size": 8
+    		}
+    	},
+    	"misc": {
+    		"colors": {
+    			"segmentStroke": "#000000"
     		}
     	}
     });
     </script>
+    
+   
     
     <div class="container">
       <div class="starter-template">
@@ -359,6 +375,8 @@
     
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    
+
 
     
     
