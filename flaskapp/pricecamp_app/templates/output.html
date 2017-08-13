@@ -248,15 +248,15 @@
     var pie = new d3pie("pieChart", {
     	"header": {
     		"title": {
-    			"text": "Products",
-    			"fontSize": 48,
-    			"font": "courier"
+    			"text": "predicted fraction",
+    			"fontSize": 32,
+    			"font": "arial"
     		},
     		"subtitle": {
-    			"text": "Predicted fraction of total revenue",
+    			"text": "of total revenue",
     			"color": "#6e7174",
-    			"fontSize": 12,
-    			"font": "courier"
+    			"fontSize": 16,
+    			"font": "arial"
     		},
     		"location": "pie-center",
     		"titleSubtitlePadding": 12
@@ -268,38 +268,38 @@
     		"location": "bottom-left"
     	},
     	"size": {
-    		"canvasWidth": 590,
-    		"pieInnerRadius": "87%",
-    		"pieOuterRadius": "73%"
+    		"canvasWidth": 690,
+    		"pieInnerRadius": "90%",
+    		"pieOuterRadius": "80%"
     	},
     	"data": {
     		"sortOrder": "label-desc",
     		"content": [
     			{
     				"label": "digital album",
-    				"value": 2,
-    				"color": "#2383c1"
+    				"value": {{recommend[0]['item_frac']}}*100,
+    				"color": "#0b8bf3"
     			},
     			{
     				"label": "bundle",
-    				"value": 10,
-    				"color": "#64a61f"
+    				"value": {{recommend[1]['item_frac']}}*100,
+    				"color": "#19ae24"
     			},
     			{
     				"label": "digital track",
-    				"value": 8,
-    				"color": "#7b6788"
+    				"value": {{recommend[2]['item_frac']}}*100,
+    				"color": "#b43ac3"
     			},
     			{
     				"label": "physical album",
-    				"value": 10,
-    				"color": "#a05c56"
+    				"value": {{recommend[3]['item_frac']}}*100,
+    				"color": "#000000"
     			}
     		]
     	},
     	"labels": {
     		"outer": {
-    			"format": "label-value2",
+    			"format": "label-percentage2",
     			"pieDistance": 20
     		},
     		"inner": {
@@ -310,7 +310,7 @@
     		},
     		"percentage": {
     			"color": "#999999",
-    			"fontSize": 11,
+    			"fontSize": 18,
     			"decimalPlaces": 0
     		},
     		"value": {
@@ -353,7 +353,7 @@
     
     <div class="container">
       <div class="starter-template">
-        <h3>predicted revenue:</h3>
+        <h3>predicted overall revenue:</h3>
         <p class="lead">{{predicted_revenue}}</p>
       </div>
      
