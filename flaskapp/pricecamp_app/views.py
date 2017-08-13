@@ -22,15 +22,16 @@ from flask import send_file
 #con = None
 #con = psycopg2.connect(database = dbname, user = user)
 
+
 @app.route('/')
 @app.route('/index')
 def index():
 
     return render_template("input.html")
 
-@app.route('/static/Data/graphic.png',methods=['GET'])
+@app.route('/graphic',methods=['GET'])
 def get_image():
- filename = './static/graphic.png'
+ filename = 'static/graphics/pmm_graphic.png'
  return send_file(filename, mimetype='image/png')
     
     
