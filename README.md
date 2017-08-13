@@ -1,7 +1,7 @@
 # price my music
 ### market insights for musicians
 
-This is the repo for pricemymusic.online, an app that predicts which combination of products & prices will maximize album sales on bandcamp for a specific band or artist. It uses data scraped from www.bandcamp.com. 
+This is the repo for www.pricemymusic.online, an app that predicts which combination of products & prices will maximize album sales on bandcamp for a specific band or artist. It uses data scraped from www.bandcamp.com. 
 
 ### Required packages:
 - numpy
