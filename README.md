@@ -25,3 +25,5 @@ Sales for any products sold by the **50 top related artists** were analyzed to d
 Here the intuition is that album sales are related to the mixture of products and prices offered, as well as the type of music it is. Clearly there are more factors that play into how an album sells (how good the particular music is, for example). Still, I think it is reasonable to hypothesize that the right combination of products and prices for particular music genres (and thus customer bases) may alone have some predictive power when considering overall sales. 
 
 Album sales were classified as low (<100), medium (100-500) or high (>500) sellers. A Random Forest Classifier was fit to a training set, cross-validated to tune parameters, and then scored on a testing set. The model achieved an overall accuracy of ~80% on classifying all 3 categories correctly for each album. 
+
+Link to presentation slides on [slideshare](https://www.slideshare.net/secret/mU1sD5QFulI76c). 
